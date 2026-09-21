@@ -9,6 +9,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
 
     steps:
       - uses: actions/checkout@v4
@@ -28,4 +31,12 @@ jobs:
 
       - name: Run tests
         working-directory: app
-        run: python -m pytest app/test -v
+        run: python -m pytest app/test -v --junitxml=test-results.xml
+
+      - name: Publish test summary
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Resultados pytest
+          path: app/test-results.xml
+          reporter: java-junit
