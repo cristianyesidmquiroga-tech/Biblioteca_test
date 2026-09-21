@@ -73,6 +73,7 @@ def test_computer_loan_creation_and_relationships(app, user, computer):
     assert cloan.user == user
     assert computer.computerLoans[0] == cloan
     assert user.computerLoansUser.count() == 1
+    assert repr(cloan) == f"<ComputerLoan {cloan.idLoan} of Computer {computer.idComputer} to User {user.idUser}>"
 
 
 def test_loan_creation_defaults_and_relationships(app, user, book):
@@ -87,6 +88,7 @@ def test_loan_creation_defaults_and_relationships(app, user, book):
     assert loan.user == user
     assert book.loans.count() == 1
     assert user.loansUser.count() == 1
+    assert repr(loan) == f"<Loan {loan.idLoan} of Book {book.idBook} to User {user.idUser}>"
 
 
 def test_user_get_id(app, user):
