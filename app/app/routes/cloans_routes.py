@@ -43,8 +43,9 @@ def edit(id):
     if request.method == 'POST':
         loan.computerId = request.form['computerId']
         loan.userId = request.form['userId']
-        loan.loanDate = request.form['loanDate']
-        loan.returnDate = request.form['returnDate']
+        loan.loanDate = datetime.strptime(request.form['loanDate'], '%Y-%m-%d %H:%M:%S')
+        returnDate = request.form['returnDate']
+        loan.returnDate = datetime.strptime(returnDate, '%Y-%m-%d %H:%M:%S') if returnDate else None
         loan.status = request.form['status']
         db.session.commit()
         return redirect(url_for('cloans.index'))

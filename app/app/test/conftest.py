@@ -21,5 +21,53 @@ def user(app):
     user = User(nameUser="test_user", passwordUser="test_password")
     db.session.add(user)
     db.session.commit()  # Commit changes within the context
-    yield user    
+    yield user
   # Cleanup changes within the context
+
+@pytest.fixture
+def author(app):
+    from app.models.authors import Author
+    author = Author(nameAuthor="test_author", nationalityAuthor="Colombiana")
+    db.session.add(author)
+    db.session.commit()
+    yield author
+
+@pytest.fixture
+def book(app, author):
+    from app.models.books import Book
+    book = Book(titleBook="test_book", authorId=author.idAuthor)
+    db.session.add(book)
+    db.session.commit()
+    yield book
+
+@pytest.fixture
+def room(app):
+    from app.models.rooms import Room
+    room = Room(name="test_room", description="test_description")
+    db.session.add(room)
+    db.session.commit()
+    yield room
+
+@pytest.fixture
+def computer(app):
+    from app.models.computers import Computer
+    computer = Computer(brandComputer="test_brand", modelComputer="test_model", statusComputer="Active")
+    db.session.add(computer)
+    db.session.commit()
+    yield computer
+
+@pytest.fixture
+def loan(app, user, book):
+    from app.models.loans import Loan
+    loan = Loan(bookId=book.idBook, userId=user.idUser)
+    db.session.add(loan)
+    db.session.commit()
+    yield loan
+
+@pytest.fixture
+def cloan(app, user, computer):
+    from app.models.cloans import ComputerLoan
+    cloan = ComputerLoan(computerId=computer.idComputer, userId=user.idUser)
+    db.session.add(cloan)
+    db.session.commit()
+    yield cloan
