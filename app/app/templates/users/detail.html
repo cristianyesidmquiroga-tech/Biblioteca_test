@@ -12,10 +12,6 @@
                 <th>Nombre</th>
                 <td>{{ user.nameUser }}</td>
             </tr>
-            <tr>
-                <th>Contraseña</th>
-                <td>{{ user.passwordUser }}</td>
-            </tr>
         </table>
         <div class="d-flex justify-content-between">
             <a href="{{ url_for('user.edit', id=user.idUser) }}" class="btn btn-primary btn-sm mb-1">

@@ -24,3 +24,18 @@ def test_delete_user(client, user):
     assert response.status_code == 200
     assert b"Usuarios" in response.data  # Asumiendo que hay un mensaje de confirmación de eliminación
 
+
+def test_add_user_guarda_hash(client, app):
+    from app.models.users import User
+    client.post('/User/add', data={'nameUser': 'ana', 'passwordUser': 'clave-segura'})
+    guardado = User.query.filter_by(nameUser='ana').first()
+    assert guardado.passwordUser != 'clave-segura'
+    assert guardado.check_password('clave-segura')
+
+def test_edit_sin_clave_no_la_cambia(client, user):
+    client.post(f'/User/edit/{user.idUser}', data={'nameUser': 'test_user', 'passwordUser': ''})
+    assert user.check_password('test_password')
+
+def test_listado_no_muestra_claves(client, user):
+    html = client.get('/User/').data
+    assert user.passwordUser.encode() not in html

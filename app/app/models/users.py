@@ -6,15 +6,22 @@ import base64
 from PIL import Image
 import os
 from flask import url_for, current_app
+from werkzeug.security import check_password_hash, generate_password_hash
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
     idUser = db.Column(db.Integer, primary_key=True)
     nameUser = db.Column(db.String(80), unique=True, nullable=False)
-    passwordUser = db.Column(db.String(120), nullable=False)
+    passwordUser = db.Column(db.String(255), nullable=False)
     
     loansUser = db.relationship("Loan", back_populates="user", lazy='dynamic')
     computerLoansUser = db.relationship('ComputerLoan', back_populates='user', lazy='dynamic')
+
+    def set_password(self, clave):
+        self.passwordUser = generate_password_hash(clave)
+
+    def check_password(self, clave):
+        return check_password_hash(self.passwordUser, clave)
 
     def get_id(self):
         return str(self.idUser)

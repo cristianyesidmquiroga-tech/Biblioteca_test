@@ -18,7 +18,8 @@ def client(app):
 @pytest.fixture
 def user(app):
     from app.models.users import User
-    user = User(nameUser="test_user", passwordUser="test_password")
+    user = User(nameUser="test_user")
+    user.set_password("test_password")
     db.session.add(user)
     db.session.commit()  # Commit changes within the context
     yield user

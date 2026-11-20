@@ -2,7 +2,7 @@ def test_login_success(client, user):
     # Enviar una solicitud POST con las credenciales correctas
     response = client.post('/', data={
         'nameUser': user.nameUser,
-        'passwordUser': user.passwordUser
+        'passwordUser': 'test_password'
     }, follow_redirects=True)
     
     # Verificar que el login fue exitoso y que el usuario fue redirigido al dashboard
@@ -34,3 +34,7 @@ def test_login_already_authenticated(client, user):
         response = client.get('/dashboard', follow_redirects=True)
         assert response.status_code == 200
         assert b"This is your dashboard" in response.data  # Asumiendo que hay un texto "Dashboard" en la página
+
+def test_login_clave_incorrecta(client, user):
+    response = client.post('/', data={'nameUser': user.nameUser, 'passwordUser': 'otra'}, follow_redirects=True)
+    assert b"Invalid credentials. Please try again." in response.data

@@ -16,7 +16,8 @@ def add():
     if request.method == 'POST':
         nameUser = request.form['nameUser']
         passwordUser = request.form['passwordUser']        
-        new_user = User(nameUser=nameUser, passwordUser=passwordUser)
+        new_user = User(nameUser=nameUser)
+        new_user.set_password(passwordUser)
         db.session.add(new_user)
         db.session.commit()
         
@@ -28,7 +29,8 @@ def edit(id):
     user = User.query.get_or_404(id)
     if request.method == 'POST':
         user.nameUser = request.form['nameUser']
-        user.passwordUser = request.form['passwordUser']
+        if request.form.get('passwordUser'):
+            user.set_password(request.form['passwordUser'])
         db.session.commit()        
         return redirect(url_for('user.index'))
 
