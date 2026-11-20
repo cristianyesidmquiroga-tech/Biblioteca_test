@@ -12,8 +12,20 @@ def app():
   
 
 @pytest.fixture
-def client(app):
+def anon(app):
     return app.test_client()
+
+@pytest.fixture
+def client(app):
+    from app.models.users import User
+    sesion = User(nameUser="sesion")
+    sesion.set_password("clave-sesion")
+    db.session.add(sesion)
+    db.session.commit()
+    cliente = app.test_client()
+    with cliente.session_transaction() as s:
+        s['_user_id'] = str(sesion.idUser)
+    return cliente
 
 @pytest.fixture
 def user(app):
