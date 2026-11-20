@@ -7,6 +7,9 @@ services:
     ports:
       - "5000:5000"
     working_dir: /workspace
+    env_file:
+      - path: .env
+        required: false
     command: >
       sh -c "
         if [ ! -f /workspace/venv/bin/activate ]; then python -m venv /workspace/venv; fi &&
