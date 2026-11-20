@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
+import click
 import os
 
 db = SQLAlchemy()
@@ -28,4 +29,20 @@ def create_app():
     app.register_blueprint(cloans_routes.bp)
     app.register_blueprint(computers_routes.bp)
     app.register_blueprint(room_routes.bp)
+
+    @app.before_request
+    def exigir_sesion():
+        if request.endpoint not in ('auth.login', 'static') and not current_user.is_authenticated:
+            return login_manager.unauthorized()
+
+    @app.cli.command('crear-usuario')
+    @click.argument('nombre')
+    @click.password_option()
+    def crear_usuario(nombre, password):
+        from .models.users import User
+        usuario = User(nameUser=nombre)
+        usuario.set_password(password)
+        db.session.add(usuario)
+        db.session.commit()
+        click.echo(f'Usuario {nombre} creado.')
     return app 
