@@ -12,9 +12,6 @@ services:
         if [ ! -f /workspace/venv/bin/activate ]; then python -m venv /workspace/venv; fi &&
         . /workspace/venv/bin/activate &&
         pip install -r requirements.txt &&
-        if [ ! -f /workspace/cert.pem ] || [ ! -f /workspace/key.pem ]; then
-          openssl req -x509 -newkey rsa:4096 -keyout /workspace/key.pem -out /workspace/cert.pem -days 365 -nodes -subj '/CN=localhost'
-        fi &&
         python run.py
       "
 volumes:
