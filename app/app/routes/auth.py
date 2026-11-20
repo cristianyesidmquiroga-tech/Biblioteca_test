@@ -10,7 +10,8 @@ def login():
         nameUser = request.form['nameUser']
         passwordUser = request.form['passwordUser']
         
-        if (user := User.query.filter_by(nameUser=nameUser, passwordUser=passwordUser).first()):
+        user = User.query.filter_by(nameUser=nameUser).first()
+        if user and user.check_password(passwordUser):
             login_user(user)
             flash("Login successful!", "success")
             return redirect(url_for('user.index'))
